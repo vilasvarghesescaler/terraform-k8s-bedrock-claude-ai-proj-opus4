@@ -22,6 +22,10 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
+      - name: Debug role ARN
+        run: |
+          echo "ROLE=${{ secrets.AWS_ROLE_ARN }}"
+
       - name: Debug OIDC claims
         env:
           ACTIONS_ID_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
