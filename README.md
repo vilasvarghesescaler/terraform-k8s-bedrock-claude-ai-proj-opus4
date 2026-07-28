@@ -3,5 +3,5 @@
 - terraform init -backend-config=backend.hcl
 manually once adding the contents of backend.hcl file to the secrets, that is bucket name and the region
 - test
-- ci run again
+- ci run again again
 export GITHUB_TOKEN=**********
