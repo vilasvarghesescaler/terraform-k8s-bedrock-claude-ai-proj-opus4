@@ -22,6 +22,15 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
+      - name: Debug OIDC claims
+        env:
+          ACTIONS_ID_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+        run: |
+          TOKEN=$(curl -sS "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" | jq -r .value)
+          echo "$TOKEN" | cut -d. -f2 | base64 -d 2>/dev/null | jq '{sub, aud, iss, repository, ref}'
+
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -35,7 +44,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init -input=false -backend-config="bucket=${{ secrets.BUCKET_NAME }}" -backend-config="region=${{ vars.AWS_REGION }}"
+        run: terraform init -input=false -backend-config="bucket=tfstate-development-tfstate-488519936220" -backend-config="region=${{ vars.AWS_REGION }}"
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
@@ -101,4 +110,5 @@ jobs:
           [ "${{ steps.fmt.outcome }}" = "success" ]      || { echo "::error::terraform fmt failed"; exit 1; }
           [ "${{ steps.validate.outcome }}" = "success" ] || { echo "::error::terraform validate failed"; exit 1; }
           [ "${{ steps.plan.outcome }}" = "success" ]     || { echo "::error::terraform plan failed"; exit 1; }
+
 
