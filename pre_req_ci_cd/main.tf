@@ -3,7 +3,9 @@ module "github_oidc_cicd" {
   source = "git::https://github.com/samarthsharma-maker/terraform-aws-github-oidc-cicd.git?ref=main"
 
   github_org  = var.github_org
+  github_owner_id = var.github_owner_id
   github_repo = var.github_repo
+  github_repo_id = var.github_repo_id
 
   short_name  = var.short_name
   environment = var.environment

@@ -10,10 +10,22 @@ variable "github_org" {
   default     = "vilasvarghesescaler"
 }
 
+variable "github_owner_id" {
+  description = "GitHub owner/organization ID."
+  type        = string
+  default     = "238478114"
+}
+
 variable "github_repo" {
   description = "Repository to wire up."
   type        = string
   default     = "terraform-k8s-bedrock-claude-ai-proj-opus4"
+}
+
+variable "github_repo_id" {
+  description = "Repository ID."
+  type        = string
+  default     = "1314670716"
 }
 
 variable "short_name" {
