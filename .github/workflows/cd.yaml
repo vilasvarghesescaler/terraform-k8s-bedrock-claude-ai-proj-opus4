@@ -42,7 +42,8 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Terraform Init
-        run: terraform init -input=false -backend-config="${{ secrets.BUCKET_NAME }}" -backend-config="region=${{ vars.AWS_REGION }}"
+        run: terraform init -input=false -backend-config="bucket=${{ secrets.BUCKET_NAME }}" -backend-config="region=${{ vars.AWS_REGION }}"
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
+

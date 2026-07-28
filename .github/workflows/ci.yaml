@@ -44,7 +44,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init -input=false -backend-config="bucket=tfstate-development-tfstate-488519936220" -backend-config="region=${{ vars.AWS_REGION }}"
+        run: terraform init -input=false -backend-config="bucket=${{ secrets.BUCKET_NAME }}" -backend-config="region=${{ vars.AWS_REGION }}"
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
