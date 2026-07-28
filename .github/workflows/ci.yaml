@@ -22,6 +22,24 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v3
 
+      - name: Debug role ARN
+        run: |
+          echo "ROLE=${{ secrets.AWS_ROLE_ARN }}"
+
+      - name: Test AssumeRoleWithWebIdentity
+        env:
+          ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+          ACTIONS_ID_TOKEN_REQUEST_URL: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL }}
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
+        run: |
+          TOKEN=$(curl -sS "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" | jq -r .value)
+
+          aws sts assume-role-with-web-identity \
+            --role-arn "$ROLE_ARN" \
+            --role-session-name github-test \
+            --web-identity-token "$TOKEN"
+
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v6
         with:
